@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f766e">
+<meta name="description" content="Panduan praktik motor servo SG90 untuk Informatika Kelas XII: rangkaian, kode Arduino, percobaan, tantangan, dan pengumpulan tugas.">
+<title>Praktik Motor Servo SG90 | Informatika XII</title>
+<style>
+  :root { --ink:#183047; --muted:#587181; --teal:#087a75; --tealDark:#075b59; --aqua:#e1f5f0; --cream:#fffbf4; --paper:#ffffff; --edge:#dbe5e7; --soft:#f4f8f8; --amber:#fff3dc; --gold:#c77b11; --shadow:0 12px 34px rgba(22,64,78,.075); }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; scroll-padding-top:88px; }
+  body { margin:0; color:var(--ink); background:linear-gradient(180deg,#eaf7f4 0,#f6f9f8 370px,#f6f9f8 100%); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.55; }
+  button,a { -webkit-tap-highlight-color:transparent; }
+  button { font:inherit; cursor:pointer; }
+  a { color:var(--tealDark); }
+  .topbar { position:sticky; top:0; z-index:50; background:rgba(255,255,255,.94); border-bottom:1px solid var(--edge); backdrop-filter:blur(12px); }
+  .top-inner { max-width:1120px; margin:auto; padding:12px 22px; display:flex; gap:18px; align-items:center; justify-content:space-between; }
+  .brand { display:flex; gap:9px; align-items:center; color:#133c49; font-weight:850; font-size:13px; letter-spacing:.02em; white-space:nowrap; }
+  .brandmark { background:var(--teal); color:white; display:grid; place-items:center; width:32px; height:32px; border-radius:10px; font-size:17px; }
+  .toplinks { display:flex; gap:6px; flex-wrap:wrap; justify-content:end; }
+  .toplinks a { color:var(--muted); font-size:12px; text-decoration:none; padding:6px 9px; border-radius:8px; font-weight:650; }
+  .toplinks a:hover,.toplinks a:focus-visible { background:var(--aqua); color:var(--tealDark); }
+  .wrap { max-width:1040px; padding:28px 22px 64px; margin:auto; }
+  .hero { color:white; background:radial-gradient(circle at 95% -30%,#2da49a 0,transparent 42%),linear-gradient(125deg,#104c5e,#087a75); border-radius:24px; padding:31px 34px; box-shadow:0 18px 45px rgba(14,104,100,.18); overflow:hidden; position:relative; }
+  .hero:after { content:""; pointer-events:none; position:absolute; width:220px;height:220px; border:32px solid rgba(255,255,255,.055); border-radius:50%; right:-55px;bottom:-165px; }
+  .eyebrow { text-transform:uppercase; letter-spacing:.14em; font-size:11px; font-weight:800; opacity:.84; }
+  h1 { font-size:clamp(28px,4.7vw,42px); line-height:1.14; margin:13px 0 12px; letter-spacing:-.04em; }
+  .hero p { margin:0; max-width:680px; opacity:.91; font-size:15px; }
+  .chips { display:flex; gap:8px; margin-top:24px; flex-wrap:wrap; }
+  .chip { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18); padding:6px 11px; border-radius:99px; font-size:12px; font-weight:700; }
+  .strip { display:flex; align-items:center; gap:14px; background:white; border:1px solid var(--edge); border-radius:14px; margin:18px 0 24px; padding:14px 17px; box-shadow:var(--shadow); }
+  .strip svg { width:24px; flex-shrink:0; }
+  .strip p { margin:0; font-size:13px; }
+  .grid { display:grid; grid-template-columns:minmax(0,1fr) 270px; align-items:start; gap:22px; }
+  .main { min-width:0; display:grid; gap:20px; }
+  .panel { background:var(--paper); border:1px solid var(--edge); border-radius:18px; overflow:hidden; box-shadow:var(--shadow); }
+  .panel-head { padding:21px 23px 0; }
+  .panel-body { padding:0 23px 23px; }
+  .section-tag { font-size:11px; font-weight:850; letter-spacing:.10em; color:var(--teal); text-transform:uppercase; }
+  h2 { margin:4px 0 5px; font-size:22px; letter-spacing:-.03em; line-height:1.3; }
+  .desc { color:var(--muted); font-size:13px; margin:0 0 19px; }
+  h3 { font-size:14px; margin:20px 0 9px; }
+  .steps { padding-left:20px; margin:10px 0 0; }
+  .steps li { padding-left:4px; margin:10px 0; font-size:14px; }
+  .steps li::marker { color:var(--teal); font-weight:800; }
+  .mini { color:var(--muted); font-size:12px; }
+  .safety { padding:13px 15px; background:var(--amber); border:1px solid #f2d9ac; border-radius:12px; font-size:13px; }
+  .safety strong { color:#91560a; }
+  .wiring { border:1px solid var(--edge); border-radius:13px; margin:15px 0; overflow:hidden; }
+  .wiring svg { display:block; width:100%; height:auto; background:#f9fcfb; }
+  .wire-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .wire-table th { text-align:left; color:var(--muted); background:#f3f7f7; font-size:11px; letter-spacing:.02em; }
+  .wire-table td,.wire-table th { padding:11px 13px; border-bottom:1px solid var(--edge); }
+  .wire-table tr:last-child td { border-bottom:none; }
+  .dot { display:inline-block; vertical-align:middle; width:9px;height:9px;border-radius:50%;margin-right:7px; }
+  .dot.brown { background:#916244; }.dot.red { background:#db575b; }.dot.orange { background:#f19b36; }
+  .codebox { border-radius:13px; overflow:hidden; border:1px solid #223c4c; margin:13px 0 14px; }
+  .codebar { background:#1b3445; display:flex; justify-content:space-between; gap:9px; align-items:center; padding:9px 12px; }
+  .codebar span { color:#dcecec; font-weight:800; font-size:11px; letter-spacing:.09em; }
+  .copy { border:1px solid rgba(255,255,255,.25); background:#28485a; color:white; padding:6px 10px; font-size:12px; font-weight:700; border-radius:8px; }
+  .copy:hover,.copy:focus-visible { background:#397085; }
+  pre { margin:0; color:#e9f4f4; background:#102938; padding:15px 17px; overflow-x:auto; font:12.5px/1.65 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace; tab-size:2; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace; }
+  p code,li code,td code { font-size:.94em; border-radius:4px; padding:2px 4px; background:#eef4f4; color:#15565c; }
+  .task { background:var(--aqua); border:1px solid #b5e4db; padding:14px 15px; border-radius:12px; margin:14px 0; }
+  .task strong { color:var(--tealDark); }
+  .task ol { margin:8px 0 0; padding-left:20px; }
+  .task li { margin:5px 0; font-size:13px; }
+  .test-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:13px 0; }
+  .test { padding:12px; background:var(--soft); border:1px solid var(--edge); border-radius:11px; }
+  .test b { color:var(--tealDark); font-size:13px; display:block; }
+  .test span { color:var(--muted); font-size:12px; }
+  .checkpoint { display:flex; gap:9px; margin:17px 0 0; padding-top:15px; border-top:1px dashed var(--edge); align-items:center; }
+  .checkpoint input { width:19px; height:19px; accent-color:var(--teal); }
+  .checkpoint label { font-size:13px; font-weight:700; cursor:pointer; }
+  .aside { position:sticky; top:78px; display:grid; gap:15px; }
+  .aside .panel { padding:19px; }
+  .aside h3 { margin:0 0 12px; font-size:15px; }
+  .navsteps { list-style:none; margin:0; padding:0; display:grid; gap:5px; }
+  .navsteps a { display:flex; align-items:center; gap:10px; border-radius:10px; padding:9px; text-decoration:none; color:var(--muted); font-size:12.5px; font-weight:700; }
+  .navsteps a:hover { background:var(--soft); color:var(--tealDark); }
+  .circle { background:#e5eeee; color:var(--tealDark); width:27px;height:27px; border-radius:9px; display:grid; place-items:center; flex-shrink:0; font-size:12px; }
+  .progress { margin-top:16px; border-top:1px solid var(--edge); padding-top:13px; }
+  .progress-head { display:flex; justify-content:space-between; font-size:12px; font-weight:750; margin-bottom:8px; }
+  .track { height:8px; border-radius:50px; background:#e8eeee; overflow:hidden; }
+  .fill { height:100%; width:0; background:var(--teal); transition:width .2s; }
+  .aside p { font-size:12.5px; margin:9px 0 0; color:var(--muted); }
+  .submit { display:block; text-align:center; text-decoration:none; background:var(--teal); color:white; font-size:13px; font-weight:850; border-radius:10px; padding:12px 13px; border:none; width:100%; }
+  .submit:hover { background:var(--tealDark); }
+  .submit[aria-disabled="true"] { background:#e9eeee; color:#657b83; cursor:not-allowed; }
+  .footer { text-align:center; margin:25px 0 0; font-size:12px; color:var(--muted); }
+  #toast { position:fixed; z-index:100; left:50%; bottom:20px; transform:translate(-50%,30px); opacity:0; background:#153e43; color:white; padding:11px 18px; border-radius:10px; font-weight:750; font-size:12px; pointer-events:none; transition:all .2s; box-shadow:0 10px 30px #173b3b30; }
+  #toast.show { opacity:1; transform:translate(-50%,0); }
+  .note { margin:10px 0; color:var(--muted); font-size:12px; }
+  details { background:var(--soft); border:1px solid var(--edge); border-radius:11px; padding:11px 13px; margin:12px 0; }
+  summary { color:var(--tealDark); cursor:pointer; font-size:13px; font-weight:800; }
+  details .codebox { margin-top:12px; }
+  .download-instruction { padding-left:18px; margin:10px 0; font-size:13px; }
+  .download-instruction li { margin:8px 0; }
+  @media (max-width:800px) { .grid { grid-template-columns:minmax(0,1fr); } .aside { position:static; grid-row:1; grid-template-columns:1fr 1fr; } .toplinks a { font-size:11px; padding:5px; } .wrap { padding-top:17px; } }
+  @media (max-width:560px) { .hero { border-radius:17px; padding:25px 21px; } .panel-head { padding:20px 17px 0; }.panel-body { padding:0 17px 18px; } .aside { grid-template-columns:1fr; }.toplinks { display:none; }.test-cards { grid-template-columns:1fr; }.strip { align-items:start; }.wiring svg { min-width:0; } }
+  @media print { .topbar,.aside,.copy,.checkpoint,#toast { display:none !important; } .wrap { max-width:none; padding:0; }.grid { display:block; }.main { display:block; }.panel { box-shadow:none; break-inside:avoid; margin:0 0 16px; }.hero { box-shadow:none; print-color-adjust:exact; -webkit-print-color-adjust:exact; } pre { white-space:pre-wrap; overflow:visible; } }
+</style>
+</head>
+<body>
+<!-- Google Form pengumpulan telah disambungkan. -->
+<header class="topbar">
+  <div class="top-inner">
+    <div class="brand"><span class="brandmark" aria-hidden="true">⚙</span><span>INFORMATIKA XII · ARDUINO LAB</span></div>
+    <nav class="toplinks" aria-label="Navigasi praktik">
+      <a href="#persiapan">Persiapan</a><a href="#praktik1">Praktik 1</a><a href="#praktik2">Praktik 2</a><a href="#tantangan">Tantangan</a><a href="#pengumpulan">Pengumpulan</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Lembar Panduan Praktik · Kelas XII</div>
+    <h1>Praktik Motor Servo <span style="color:#a5eee0">SG90</span></h1>
+    <p>Rangkai servo, kendalikan sudutnya, amati perubahan gerakan, lalu selesaikan tantangan modifikasi kode.</p>
+    <div class="chips"><span class="chip">👥 Kelompok 3 orang</span><span class="chip">💻 Arduino Uno + SG90</span><span class="chip">🎯 Demonstrasi & file .ino</span></div>
+  </header>
+  <div class="strip" role="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#087a75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+    <p><strong>Target hari ini:</strong> servo dapat bergerak sesuai sudut yang ditentukan, gerakannya dapat dibuat bertahap, dan setiap kelompok mampu memodifikasi kode dasar secara mandiri.</p>
+  </div>
+  <div class="grid">
+    <div class="main">
+      <section class="panel" id="persiapan">
+        <div class="panel-head"><span class="section-tag">Bagian A</span><h2>Persiapan rangkaian</h2><p class="desc">Pastikan koneksi benar sebelum menyambungkan USB Arduino.</p></div>
+        <div class="panel-body">
+          <div class="safety"><strong>⚠ Aturan utama:</strong> cabut kabel USB sebelum memasang, melepas, atau mengubah sambungan. Jangan memaksa poros/horn servo, dan hentikan jika servo terasa tertahan atau terlalu panas.</div>
+          <div class="wiring">
+            <svg viewBox="0 0 640 185" role="img" aria-label="Diagram konseptual: kabel cokelat servo menuju GND, merah menuju 5V, dan oranye menuju D9 pada Arduino Uno">
+              <rect x="24" y="27" rx="15" width="220" height="126" fill="#d9f2ed" stroke="#89c6bd" stroke-width="2"/>
+              <text x="44" y="53" fill="#134a52" font-size="17" font-weight="750">Arduino Uno</text>
+              <circle cx="211" cy="83" r="5" fill="#916244"/><circle cx="211" cy="109" r="5" fill="#db575b"/><circle cx="211" cy="135" r="5" fill="#f19b36"/>
+              <text x="153" y="87" fill="#134a52" font-size="15" font-weight="700">GND</text><text x="171" y="113" fill="#134a52" font-size="15" font-weight="700">5V</text><text x="173" y="139" fill="#134a52" font-size="15" font-weight="700">D9</text>
+              <path d="M216 83 H410" stroke="#916244" stroke-width="6" stroke-linecap="round"/><path d="M216 109 H410" stroke="#db575b" stroke-width="6" stroke-linecap="round"/><path d="M216 135 H410" stroke="#f19b36" stroke-width="6" stroke-linecap="round"/>
+              <rect x="410" y="45" width="194" height="106" rx="14" fill="#3783bb" stroke="#235b87" stroke-width="2"/>
+              <circle cx="503" cy="62" r="24" fill="#f5f8f7" stroke="#b9cacc" stroke-width="3"/><circle cx="503" cy="62" r="8" fill="#abbebf"/>
+              <rect x="498" y="22" width="10" height="42" rx="5" fill="#f3f7f7" stroke="#b6c7c9" stroke-width="2"/>
+              <text x="506" y="105" text-anchor="middle" fill="white" font-size="18" font-weight="750">SG90</text><text x="506" y="122" text-anchor="middle" fill="white" font-size="12">servo</text>
+            </svg>
+          </div>
+          <table class="wire-table"><thead><tr><th>Kabel SG90</th><th>Hubungkan ke Arduino Uno</th></tr></thead><tbody>
+            <tr><td><span class="dot brown"></span>Cokelat · GND</td><td><strong>GND</strong></td></tr>
+            <tr><td><span class="dot red"></span>Merah · VCC</td><td><strong>5V</strong></td></tr>
+            <tr><td><span class="dot orange"></span>Oranye · sinyal</td><td><strong>D9</strong></td></tr>
+          </tbody></table>
+          <p class="note">Gambar menunjukkan hubungan kabel, bukan lokasi fisik pin pada papan. Periksa tulisan pin di Arduino. Warna kabel bisa berbeda pada servo tipe lain.</p>
+          <details><summary>Horn servo masih terpisah? Lihat cara memasangnya</summary>
+            <ol class="steps">
+              <li>Jika ingin posisi horn rapi, jalankan kode pemusatan 90° berikut saat horn belum terpasang.</li>
+              <li>Setelah poros berhenti, <strong>cabut USB</strong>.</li>
+              <li>Pasang horn satu lengan ke arah yang mudah diamati, lalu kencangkan sekrup kecil secukupnya (jangan terlalu keras).</li>
+              <li>Pastikan horn tidak membentur meja atau benda lain sebelum menjalankan kode berikutnya.</li>
+            </ol>
+            <div class="codebox"><div class="codebar"><span>KODE OPSIONAL · POSISI TENGAH</span><button class="copy" data-copy="center">Salin kode</button></div><pre id="code-center">#include &lt;Servo.h&gt;
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+  myServo.write(90);
+}
+
+void loop() {
+}</pre></div>
+          </details>
+          <label class="checkpoint"><input type="checkbox" data-step="a"><span>Rangkaian terpasang dengan aman dan siap diuji</span></label>
+        </div>
+      </section>
+      <section class="panel" id="praktik1">
+        <div class="panel-head"><span class="section-tag">Bagian B</span><h2>Praktik 1: mengubah posisi servo</h2></div>
+        <div class="panel-body">
+          <ol class="steps"><li>Salin <strong>Kode A</strong> ke Arduino IDE, pilih board dan port yang sesuai, lalu upload.</li><li>Amati servo bergerak antara dua posisi.</li></ol>
+          <div class="codebox"><div class="codebar"><span>KODE A · POSISI SERVO</span><button class="copy" data-copy="a">Salin kode</button></div><pre id="code-a">#include &lt;Servo.h&gt;
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  myServo.write(45);
+  delay(1500);
+
+  myServo.write(135);
+  delay(1500);
+}</pre></div>
+          <div class="task"><strong>🔎 Coba dua perubahan berikut:</strong><ol><li>Ubah <code>45</code> dan <code>135</code> menjadi <code>30</code> dan <code>120</code>, lalu upload ulang.</li><li>Ubah kedua <code>delay(1500)</code> menjadi <code>delay(3000)</code>, lalu upload ulang.</li></ol></div>
+          <p class="mini"><strong>Amati:</strong> apa yang berubah pada posisi servo? Apa yang berubah ketika nilai <code>delay()</code> diperbesar? Diskusikan bersama kelompok.</p>
+          <label class="checkpoint"><input type="checkbox" data-step="b"><span>Praktik 1 dan kedua modifikasi sudah dicoba</span></label>
+        </div>
+      </section>
+      <section class="panel" id="praktik2">
+        <div class="panel-head"><span class="section-tag">Bagian C</span><h2>Praktik 2: gerakan perlahan dengan <code>for</code></h2></div>
+        <div class="panel-body">
+          <ol class="steps"><li>Salin dan upload <strong>Kode B</strong>. Perhatikan bedanya dengan Kode A.</li><li>Ubah <strong>hanya</strong> <code>delay()</code> di dalam kedua perulangan <code>for</code>, lalu bandingkan gerakannya.</li></ol>
+          <div class="codebox"><div class="codebar"><span>KODE B · GERAKAN BERTAHAP</span><button class="copy" data-copy="b">Salin kode</button></div><pre id="code-b">#include &lt;Servo.h&gt;
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  for (int sudut = 20; sudut &lt;= 160; sudut++) {
+    myServo.write(sudut);
+    delay(20);
+  }
+
+  delay(1000);
+
+  for (int sudut = 160; sudut &gt;= 20; sudut--) {
+    myServo.write(sudut);
+    delay(20);
+  }
+
+  delay(1000);
+}</pre></div>
+          <h3>Bandingkan tiga nilai delay per langkah</h3>
+          <div class="test-cards"><div class="test"><b>10 ms</b><span>Uji dan amati</span></div><div class="test"><b>20 ms</b><span>Nilai awal kode</span></div><div class="test"><b>50 ms</b><span>Uji dan amati</span></div></div>
+          <p class="mini"><strong>Diskusikan:</strong> makin besar nilai jeda per langkah, gerakan terlihat makin cepat atau lambat? Ingat: servo tetap mempunyai batas kecepatan fisik.</p>
+          <label class="checkpoint"><input type="checkbox" data-step="c"><span>Praktik 2 dan perbandingan delay selesai</span></label>
+        </div>
+      </section>
+      <section class="panel" id="tantangan">
+        <div class="panel-head"><span class="section-tag">Bagian D</span><h2>Tantangan modifikasi</h2><p class="desc">Gunakan Kode B sebagai dasar.</p></div>
+        <div class="panel-body">
+          <div class="task"><strong>🎯 Misi kelompok</strong><ol><li>Servo bergerak bertahap dari <strong>30° ke 150°</strong>.</li><li>Program menunggu selama <strong>2 detik</strong>.</li><li>Servo kembali menuju <strong>30° dengan gerakan lebih cepat</strong>.</li><li>Gerakan tersebut <strong>berulang terus-menerus</strong>.</li></ol></div>
+          <div class="safety" style="background:#f0fbf6;border-color:#b5e4ce"><strong>✅ Verifikasi guru:</strong> tunjukkan gerakan servo kepada guru. Salah satu anggota kelompok menjelaskan bagian kode yang diubah. Simpan kode akhir berformat <code>.ino</code>.</div>
+          <label class="checkpoint"><input type="checkbox" data-step="d"><span>Tantangan sudah ditunjukkan kepada guru</span></label>
+        </div>
+      </section>
+      <section class="panel" id="pengumpulan">
+        <div class="panel-head"><span class="section-tag">Langkah terakhir</span><h2>Simpan & kumpulkan program</h2></div>
+        <div class="panel-body">
+          <ol class="download-instruction"><li>Di Arduino IDE, simpan kode tantangan akhir dengan nama <code>Kelompok_01_Servo.ino</code> (sesuaikan nomor kelompok).</li><li><strong>Satu file per kelompok.</strong> Unggah file <code>.ino</code> melalui tombol pengumpulan.</li><li>Cabut USB, lepaskan rangkaian dengan hati-hati, lalu kembalikan semua komponen.</li></ol>
+          <a class="submit" id="submitLink" href="#pengumpulan" aria-disabled="true">Tautan pengumpulan belum dipasang</a>
+        </div>
+      </section>
+    </div>
+    <aside class="aside" aria-label="Panduan singkat dan progres">
+      <div class="panel">
+        <h3>Alur kegiatan</h3>
+        <ol class="navsteps"><li><a href="#persiapan"><span class="circle">A</span>Persiapan</a></li><li><a href="#praktik1"><span class="circle">B</span>Ubah sudut</a></li><li><a href="#praktik2"><span class="circle">C</span>Gerakan perlahan</a></li><li><a href="#tantangan"><span class="circle">D</span>Tantangan</a></li><li><a href="#pengumpulan"><span class="circle">✓</span>Demonstrasi & unggah</a></li></ol>
+        <div class="progress"><div class="progress-head"><span>Progres mandiri</span><span id="progressCount">0 / 4</span></div><div class="track"><div id="progressFill" class="fill"></div></div><p>Centang setiap bagian ketika sudah selesai. Centang ini hanya penanda di perangkatmu, bukan pengumpulan tugas.</p></div>
+      </div>
+      <div class="panel"><h3>Kalau servo tidak bergerak…</h3><p>Cabut USB terlebih dahulu. Periksa sambungan <strong>GND–5V–D9</strong>, kekencangan jumper, dan apakah kode berhasil di-upload.</p><p>Jangan memaksa horn yang tertahan. Bila masih bermasalah, tanyakan kepada guru.</p></div>
+    </aside>
+  </div>
+  <div class="footer">Informatika Kelas XII · Praktik Dasar Motor Servo SG90 · Panduan belajar digital</div>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+  // Google Form pengumpulan: tautan responden.
+  const SUBMISSION_URL = "https://forms.gle/x3dDrw5WoYBKCVai6";
+
+  const submitLink = document.getElementById('submitLink');
+  if (/^https:\/\//i.test(SUBMISSION_URL)) {
+    submitLink.href = SUBMISSION_URL;
+    submitLink.target = '_blank';
+    submitLink.rel = 'noopener noreferrer';
+    submitLink.removeAttribute('aria-disabled');
+    submitLink.textContent = 'Buka Form Pengumpulan ↗';
+  } else {
+    submitLink.addEventListener('click', e => { e.preventDefault(); showToast('Tautan Google Form belum ditambahkan oleh guru.'); });
+  }
+
+  let toastTimer;
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+  async function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return; }
+    const el = document.createElement('textarea');
+    el.value = text; el.style.position = 'fixed'; el.style.left = '-9999px';
+    document.body.appendChild(el); el.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(el);
+    if (!ok) throw new Error('Gagal menyalin');
+  }
+  document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+    const source = document.getElementById('code-' + button.dataset.copy);
+    try { await copyText(source.textContent.trim()); showToast('Kode berhasil disalin. Tempel di Arduino IDE.'); }
+    catch { showToast('Tidak bisa menyalin otomatis. Blok kode lalu salin manual.'); }
+  }));
+
+  const checks = [...document.querySelectorAll('[data-step]')];
+  function updateProgress() {
+    const done = checks.filter(c => c.checked).length;
+    document.getElementById('progressCount').textContent = done + ' / ' + checks.length;
+    document.getElementById('progressFill').style.width = Math.round(100*done/checks.length) + '%';
+  }
+  checks.forEach(c => c.addEventListener('change', updateProgress));
+  updateProgress();
+</script>
+</body>
+</html>
